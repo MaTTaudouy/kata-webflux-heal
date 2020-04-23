@@ -12,7 +12,7 @@
 * Démarrer le serveur patient-service
 * Démarrer l'appli web
 * Démarrer le heal-service
-* Faire F5 de manière régulière pour voir les changements en bdd
+* Rafraichir la page du navigateur de manière régulière pour voir les changements en bdd
 
 ## Migration de WebMvc vers WebFlux
 ### Utilisation de l'API Reactor
