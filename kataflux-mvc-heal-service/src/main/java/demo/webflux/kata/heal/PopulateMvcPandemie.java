@@ -2,6 +2,8 @@ package demo.webflux.kata.heal;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import demo.webflux.kata.heal.api.PatientDTO;
@@ -24,51 +27,55 @@ public class PopulateMvcPandemie {
 	private static final int VACCINATION_DELAY = 5;
 
 	@Bean
-	public ApplicationRunner virus() {
-		return (args) -> {
-			//FIXME 1 à 100
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<List<PatientDTO>> response = restTemplate.exchange("http://localhost:8080/patients",
-					HttpMethod.GET, null, new ParameterizedTypeReference<List<PatientDTO>>() {
-					});
-			
-			final List<PatientDTO> patients = response.getBody();
-			Collections.shuffle(patients);
-
-			patients.stream().forEach((p) -> {
-				final var postClient = new RestTemplate();
-				postClient.put("http://localhost:8080/contaminate/" + p.getId(), HttpEntity.EMPTY);
-				try {
-					Thread.sleep(CONTAMINATION_DELAY * 1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace(System.err);
-				}
-			});
+	public ApplicationRunner pandemie() {
+		return args -> {
+			final ExecutorService threadPool = Executors.newFixedThreadPool(2);
+			threadPool.execute(this::virus);
+			threadPool.execute(this::vaccination);
+			threadPool.shutdown();
 		};
 	}
 
-	@Bean
-	public ApplicationRunner vaccination() {
-		return (args) -> {
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<List<PatientDTO>> response = restTemplate.exchange("http://localhost:8080/patients",
-					HttpMethod.GET, null, new ParameterizedTypeReference<List<PatientDTO>>() {
-					});
+	public void virus() {
+		// FIXME 1 à 100
+		RestTemplate restTemplate = new RestTemplate(new SimpleClientHttpRequestFactory());
+		ResponseEntity<List<PatientDTO>> response = restTemplate.exchange("http://localhost:8080/patients",
+				HttpMethod.GET, null, new ParameterizedTypeReference<List<PatientDTO>>() {
+				});
 
-			final List<PatientDTO> patients = response.getBody();
-			Collections.shuffle(patients);
+		final List<PatientDTO> patients = response.getBody();
+		Collections.shuffle(patients);
 
-			patients.stream().forEach((p) -> {
-				final var postClient = new RestTemplate();
-				postClient.put("http://localhost:8080/heal/cure/" + p.getId(), HttpEntity.EMPTY);
-				try {
-					Thread.sleep(VACCINATION_DELAY * 1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace(System.err);
-				}
-			});
+		patients.stream().forEach((p) -> {
+			final var postClient = new RestTemplate();
+			postClient.put("http://localhost:8080/contaminate/" + p.getId(), HttpEntity.EMPTY);
+			try {
+				Thread.sleep(CONTAMINATION_DELAY * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace(System.err);
+			}
+		});
+	}
 
-		};
+	public void vaccination() {
+		RestTemplate restTemplate = new RestTemplate(new SimpleClientHttpRequestFactory());
+		ResponseEntity<List<PatientDTO>> response = restTemplate.exchange("http://localhost:8080/patients",
+				HttpMethod.GET, null, new ParameterizedTypeReference<List<PatientDTO>>() {
+				});
+
+		final List<PatientDTO> patients = response.getBody();
+		Collections.shuffle(patients);
+
+		patients.stream().forEach((p) -> {
+			final var postClient = new RestTemplate();
+			postClient.put("http://localhost:8080/heal/cure/" + p.getId(), HttpEntity.EMPTY);
+			try {
+				Thread.sleep(VACCINATION_DELAY * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace(System.err);
+			}
+		});
+
 	}
 
 //	@Bean

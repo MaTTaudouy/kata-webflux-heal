@@ -1,6 +1,6 @@
 import React from "react"
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    LineChart, Line, XAxis, YAxis, CartesianGrid, 
 } from 'recharts';
 
 class PatientList extends React.Component {
@@ -129,6 +129,7 @@ class PatientList extends React.Component {
                         isLoaded: true,
                         data: result
                     });
+                     this.updateStatistic();
                 },
                 (error) => {
                     this.setState({
@@ -138,8 +139,8 @@ class PatientList extends React.Component {
                 }
             );
 
-        let eventSource = new EventSource("http://localhost:8080/heal/stream")
-         eventSource.onmessage = e => updatePatientList(JSON.parse(e.data));
+//        let eventSource = new EventSource("http://localhost:8080/heal/stream")
+//         eventSource.onmessage = e => updatePatientList(JSON.parse(e.data));
 
         const updatePatientList = (patient) => {
             const { data } = this.state;
