@@ -139,8 +139,8 @@ class PatientList extends React.Component {
                 }
             );
 
-//        let eventSource = new EventSource("http://localhost:8080/heal/stream")
-//         eventSource.onmessage = e => updatePatientList(JSON.parse(e.data));
+        let eventSource = new EventSource("http://localhost:8080/heal/stream")
+         eventSource.onmessage = e => updatePatientList(JSON.parse(e.data));
 
         const updatePatientList = (patient) => {
             const { data } = this.state;

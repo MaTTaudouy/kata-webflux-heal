@@ -1,0 +1,13 @@
+logging:
+   level:
+      org.springframework.data: DEBUG
+spring:
+   r2dbc:
+#url: r2dbc:h2:file://./../../Kata/heal/healdb?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      url: r2dbc:h2:mem:///test?options=DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      name: sa
+      password: null
+      console:
+         enabled: true
+server:
+   port: 8080
