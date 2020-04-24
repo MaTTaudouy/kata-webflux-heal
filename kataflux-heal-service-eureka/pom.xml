@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>webflux-kata</groupId>
-	<artifactId>kataflux-heal-service</artifactId>
+	<artifactId>kataflux-heal-service-eureka</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>kata</name>
 	<description>Kata project for Spring Webflux</description>
