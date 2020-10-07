@@ -18,7 +18,7 @@
 ### Utilisation de l'API Reactor
 * Dans HealController & VirusController
 * Modifier les List en FLux
-* Modifier les Objet en Mono
+* Modifier les Object en Mono
 
 ### Réduire la complexité inutile
 * __Chasse au code complexe inutile__ (Utilisation de l'API reactor)
