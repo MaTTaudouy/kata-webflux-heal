@@ -1,3 +1,4 @@
+package demo.webflux.kata.sample;
 import demo.webflux.kata.patient.model.Patient;
 import demo.webflux.kata.patient.repository.PatientRepository;
 
@@ -11,7 +12,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Configuration
-public class PatientAPI {
+public class PatientAPIFunctionalSample {
 
 	@Bean
 	public RouterFunction<ServerResponse> routes(PatientRepository patientRepository) {
